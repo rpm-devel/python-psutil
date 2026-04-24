@@ -4,30 +4,21 @@
 %global sum A process and system utilities module for Python
 
 # Filter Python modules from Provides
-%global __provides_exclude_from ^(%{python2_sitearch}|%{python3_sitearch})/.*\\.so$
+%global __provides_exclude_from ^(%{python3_sitearch})/.*\\.so$
 
 Name:           python-%{srcname}
-Version:        5.5.1
+Version:        7.2.2
 Release:        1%{?dist}
 Summary:        %{sum}
 
 License:        BSD
 URL:            https://github.com/giampaolo/psutil
 Source0:        https://github.com/giampaolo/psutil/archive/release-%{version}.tar.gz#/%{srcname}-%{version}.tar.gz
-#
-# Disable upstream failing test
-# https://github.com/giampaolo/psutil/issues/946
-#
-#Patch0:         psutil-5.4.3-disable-broken-tests.patch
 
 BuildRequires:  gcc
-BuildRequires:  python2-devel
 BuildRequires:  python%{python3_pkgversion}-devel
 # Test dependencies
 BuildRequires:  procps-ng
-BuildRequires:  python2-mock
-#BuildRequires:  python%{python3_pkgversion}-mock
-#BuildRequires:  python2-ipaddress
 
 %description
 psutil is a module providing an interface for retrieving information on all
@@ -37,23 +28,11 @@ command line tools such as: ps, top, df, kill, free, lsof, free, netstat,
 ifconfig, nice, ionice, iostat, iotop, uptime, pidof, tty, who, taskset, pmap.
 
 
-%package -n python2-%{srcname}
+%package -n python3-%{srcname}
 Summary:        %{sum}
-%{?python_provide:%python_provide python2-%{srcname}}
-Obsoletes:      python-%{srcname} < 3.1.1-3
+%{?python_provide:%python_provide python3-%{srcname}}
 
-%description -n python2-psutil
-psutil is a module providing an interface for retrieving information on all
-running processes and system utilization (CPU, memory, disks, network, users) in
-a portable way by using Python 3, implementing many functionalities offered by
-command line tools such as: ps, top, df, kill, free, lsof, free, netstat,
-ifconfig, nice, ionice, iostat, iotop, uptime, pidof, tty, who, taskset, pmap.
-
-%package -n python%{python3_pkgversion}-psutil
-Summary:        %{sum}
-%{?python_provide:%python_provide python%{python3_pkgversion}-%{srcname}}
-
-%description -n python%{python3_pkgversion}-psutil
+%description -n python3-%{srcname}
 psutil is a module providing an interface for retrieving information on all
 running processes and system utilization (CPU, memory, disks, network, users) in
 a portable way by using Python 3, implementing many functionalities offered by
@@ -73,29 +52,19 @@ done
 
 
 %build
-%py2_build
 %py3_build
 
 
 %install
-%py2_install
 %py3_install
 
 
 #%check
 # the main test target causes failures, investigating
-#make test-memleaks PYTHON=%{__python2}
 #make test-memleaks PYTHON=%{__python3}
 
 
-%files -n python2-%{srcname}
-%license LICENSE
-%doc CREDITS HISTORY.rst README.rst
-%{python2_sitearch}/%{srcname}/
-%{python2_sitearch}/*.egg-info
-
-
-%files -n python%{python3_pkgversion}-%{srcname}
+%files -n python3-%{srcname}
 %license LICENSE
 %doc CREDITS HISTORY.rst README.rst
 %{python3_sitearch}/%{srcname}/
@@ -103,6 +72,12 @@ done
 
 
 %changelog
+* Fri Apr 24 2026 CasjaysDev <rpm-devel@casjaysdev.pro> - 7.2.2-1
+- Update to 7.2.2
+
+* Fri Apr 24 2026 CasjaysDev <rpm-devel@casjaysdev.pro> - 5.5.1-2
+- Modernize for AlmaLinux 10: python3 only, remove obsolete spec constructs
+
 * Thu Feb 28 2019 Yatin Karel <ykarel@redhat.com> - 5.5.1-1
 - Update to 5.5.1 (Resolves #1567102)
 
