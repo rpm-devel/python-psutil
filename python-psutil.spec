@@ -17,9 +17,15 @@ ExclusiveArch:  x86_64 aarch64
 Source0:        https://github.com/giampaolo/psutil/archive/release-%{version}.tar.gz#/%{srcname}-%{version}.tar.gz
 
 BuildRequires:  gcc
+%if 0%{?suse_version}
+BuildRequires:  python3-devel
+# Test dependencies
+BuildRequires:  procps
+%else
 BuildRequires:  python%{python3_pkgversion}-devel
 # Test dependencies
 BuildRequires:  procps-ng
+%endif
 
 %description
 psutil is a module providing an interface for retrieving information on all
@@ -69,6 +75,12 @@ done
 
 %changelog
 * Sat Jul 05 2026 CasjaysDev <rpm-devel@casjaysdev.pro> - 7.2.2-1
+- Guard BuildRequires for openSUSE/SLES: %%python3_pkgversion is unreliable
+  on SUSE, so python%%{python3_pkgversion}-devel would not resolve to
+  python3-devel there; procps-ng is also not the SUSE package name (SUSE
+  ships plain "procps"). Added %%if 0%%{?suse_version} branch using
+  python3-devel and procps, keeping the existing RHEL/Fedora-style names
+  in the %%else branch. gcc is unchanged (same name on all target distros).
 - Remove commented-out %%check block
 - Verified Source0 downloadable; 7.2.2 confirmed current
 
