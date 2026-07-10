@@ -11,8 +11,9 @@ Version:        7.2.2
 Release:        1%{?dist}
 Summary:        %{sum}
 
-License:        BSD
+License:        BSD-3-Clause
 URL:            https://github.com/giampaolo/psutil
+ExclusiveArch:  x86_64 aarch64
 Source0:        https://github.com/giampaolo/psutil/archive/release-%{version}.tar.gz#/%{srcname}-%{version}.tar.gz
 
 BuildRequires:  gcc
@@ -41,7 +42,7 @@ ifconfig, nice, ionice, iostat, iotop, uptime, pidof, tty, who, taskset, pmap.
 
 
 %prep
-%autosetup -p0 -n %{srcname}-release-%{version}
+%autosetup -p1 -n %{srcname}-release-%{version}
 
 # Remove shebangs
 find psutil -name \*.py | while read file; do
@@ -59,11 +60,6 @@ done
 %py3_install
 
 
-#%check
-# the main test target causes failures, investigating
-#make test-memleaks PYTHON=%{__python3}
-
-
 %files -n python3-%{srcname}
 %license LICENSE
 %doc CREDITS HISTORY.rst README.rst
@@ -72,6 +68,13 @@ done
 
 
 %changelog
+* Sat Jul 05 2026 CasjaysDev <rpm-devel@casjaysdev.pro> - 7.2.2-1
+- Remove commented-out %%check block
+- Verified Source0 downloadable; 7.2.2 confirmed current
+
+* Thu Jul 03 2026 CasjaysDev <rpm-devel@casjaysdev.pro> - 7.2.2-1
+- SPDX: BSD -> BSD-3-Clause; add ExclusiveArch: x86_64 aarch64; %%autosetup -p1
+
 * Fri Apr 24 2026 CasjaysDev <rpm-devel@casjaysdev.pro> - 7.2.2-1
 - Update to 7.2.2
 
